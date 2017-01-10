@@ -9,8 +9,7 @@ namespace CetificateFileEncrypt
     {
         public static void Main(string[] args)
         {
-            Encrypt(@"C:\Users\Linko\Google Drive\SISA_Web\Documents\Cifrado\CERTM\20161016.CERTM\mvolariscom.pfx", "0s1a0t2pra$V", "M1SALAZARCONTRERAS/MAR W9CJJW MDWDGOY4 0945 306Y010A0025 347>1181  6306BY4 0036982232001290360G2001516701                          ");
-            Encrypt(@"C:\Users\Linko\Google Drive\SISA_Web\Documents\Cifrado\CERTM\CERTM\mvolariscom.pfx", "0s1a0t2pra$V", "M1SALAZARCONTRERAS/MAR W9CJJW MDWDGOY4 0945 306Y010A0025 347>1181  6306BY4 0036982232001290360G2001516701                          ");
+            Encrypt(@"C:\Users\Linko\Downloads\20151103.CERTM\CERTM\mvolariscom.pfx", "0s1a0t2pra$V", "M2JUAREZ/BENITO        S4VS4C ORDMEXY4 0935 324Y020D0001 147>1181 M5324BY4 000000000000029036073737373701                          S4VS4C MEXGDLY4 0744 324Y029C0001 12B29036073737373700                          ");
 
             Console.ReadLine();
         }
@@ -39,16 +38,14 @@ namespace CetificateFileEncrypt
                 {
                     if (ecdsa != null)
                     {
-                        encoded = Convert.ToBase64String(ecdsa.SignData(data, HashAlgorithmName.SHA256));
-                    }
-                    else
-                    {
-                        var publicKey = cert.PublicKey.Key as RSACryptoServiceProvider;
-                        var encryptedBytes = new byte[0];
-                        encryptedBytes = publicKey.Encrypt(data, false);
-                        encoded = Convert.ToBase64String(encryptedBytes);
+                        var result = ecdsa.SignData(data, HashAlgorithmName.SHA256);
+                        var sign = Convert.ToBase64String(result);
+                        encoded = text + "^1" + sign.Length.ToString("X") + sign;
+
+                        var verify = ecdsa.VerifyData(data, result, HashAlgorithmName.SHA256);
                     }
                 }
+
             }
             catch (Exception ex)
             {
